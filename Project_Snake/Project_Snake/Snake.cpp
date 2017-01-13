@@ -25,6 +25,7 @@ struct body {
 };
 heads head;
 food fruit;
+food bonus;
 body tail;
 void setup()
 {
@@ -34,6 +35,8 @@ void setup()
 	head.y = height / 2;
 	fruit.x = rand() % width;
 	fruit.y = rand() % height;
+	bonus.x = rand() % width;
+	bonus.y = rand() % height;
 	score = 0;
 	speed = 50;
 }
@@ -53,6 +56,8 @@ void draw()
 				cout << "O";
 			else if (side == fruit.y && sidew == fruit.x)
 				cout << "F";
+			else if (side == bonus.y && sidew == bonus.x)
+				cout << "B";
 			else {
 				   bool drawn = false;
 				   for (int step = 0; step < tail.lenght; step++)
@@ -167,11 +172,20 @@ void logic()
 		fruit.x = rand() % width;
 		fruit.y = rand() % height;
 	}
+	if (head.x == bonus.x && head.y == bonus.y)
+	{
+		tail.lenght++;
+		score += 2;
+		speed += 10;
+		bonus.x = rand() % width;
+		bonus.y = rand() % height;
+	}
 }
 int main()
 {
 	cout <<endl<<endl<<endl<< "       Press any key to start the game.";
 	cout << endl<< "For difficulty selection press 'e' or 'h' while playing.";
+	cout << endl<<endl << "   To change direction use keys W, A, S, D.";
 	_getch();
 	system("cls");
 	setup();
