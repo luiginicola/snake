@@ -6,6 +6,7 @@ bool game_over;
 const int width = 20;
 const int height = 20;
 int score;
+int speed;
 enum move_direction { STOP = 0, UP, DOWN, LEFT, RIGHT };
 move_direction theDirection;
 struct food{
@@ -74,6 +75,9 @@ void draw()
 	cout << "Score: " << score;
 	cout << endl;
 	cout << "Press 'x' to exit.";
+	cout << endl;
+	cout << "Press 'h' for hard or press 'e' for easy.";
+
 }
 void input()
 {
@@ -95,6 +99,12 @@ void input()
 			break;
 		case 'x':
 			game_over = true;
+			break;
+		case 'e':
+			speed = 50;
+			break;
+		case'h':
+			speed = 0;
 			break;
 		}
 	}
@@ -133,8 +143,16 @@ void logic()
 	default:
 		break;
 	}
-	if (head.x > width-2 || head.x < 0|| head.y>height || head.y<0)
-		game_over = true;
+	//if (head.x > width-2 || head.x < 0|| head.y>height || head.y<0)
+	//	game_over = true;
+	if (head.x >= width - 1)
+		head.x = 0;
+	else if (head.x < 0)
+		head.x = width - 2;
+	if (head.y >= height)
+		head.y = 0;
+	else if (head.y < 0)
+		head.y = height - 1;
 	for (int step = 0; step < tail.lenght; step++)
 	{
 		if (tail.x[step] == head.x&&tail.y[step] == head.y)
@@ -156,7 +174,7 @@ int main()
 		draw();
 		input();
 		logic();
-		Sleep(50);
+		Sleep(speed);
 	}
 	return 0;
 }
