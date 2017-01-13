@@ -1,5 +1,6 @@
 #include <iostream>
 #include <conio.h>
+#include <Windows.h>
 using namespace std;
 bool game_over;
 const int width = 20;
@@ -15,8 +16,14 @@ struct heads{
 	int x;
 	int y;
 };
+struct body {
+	int x[100];
+	int y[100];
+	int lenght;
+};
 heads head;
 food fruit;
+body tail;
 void setup()
 {
 	game_over = false;
@@ -43,7 +50,19 @@ void draw()
 				cout << "O";
 			else if (side == fruit.y && sidew == fruit.x)
 				cout << "F";
-			else cout << " ";
+			else {
+				   bool drawn = false;
+				   for (int step = 0; step < tail.lenght; step++)
+					{
+					   if (tail.x[step] == sidew&&tail.y[step] == side)
+					   {
+						   cout << "o";
+						   drawn = true;
+					   }
+					}
+				   if(!drawn)
+					cout << " ";
+				}
 			if (sidew == width - 2)
 				cout << "#";
 		}
@@ -82,6 +101,21 @@ void input()
 }
 void logic()
 {
+	heads prev;
+	prev.x = tail.x[0];
+	prev.y = tail.y[0];
+	heads prev2;
+	tail.x[0] = head.x;
+	tail.y[0] = head.y;
+	for (int step = 1; step < tail.lenght; step++)
+	{
+		prev2.x = tail.x[step];
+		prev2.y = tail.y[step];
+		tail.x[step] = prev.x;
+		tail.y[step] = prev.y;
+		prev.x = prev2.x;
+		prev.y = prev2.y;
+	}
 	switch (theDirection)
 	{
 	case UP:
@@ -99,10 +133,16 @@ void logic()
 	default:
 		break;
 	}
-	if (head.x > width-1 || head.x < 0|| head.y>height || head.y<0)
+	if (head.x > width-2 || head.x < 0|| head.y>height || head.y<0)
 		game_over = true;
+	for (int step = 0; step < tail.lenght; step++)
+	{
+		if (tail.x[step] == head.x&&tail.y[step] == head.y)
+			game_over = true;
+	}
 	if (head.x == fruit.x && head.y == fruit.y)
 	{
+		tail.lenght++;
 		score += 1;
 		fruit.x = rand() % width;
 		fruit.y = rand() % height;
@@ -116,6 +156,7 @@ int main()
 		draw();
 		input();
 		logic();
+		Sleep(50);
 	}
 	return 0;
 }
