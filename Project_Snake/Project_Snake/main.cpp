@@ -52,6 +52,9 @@ void draw()
 	for (int bottom = 0; bottom <= width; bottom++)
 		cout << "#";
 	cout << endl;
+	cout << "Score: " << score;
+	cout << endl;
+	cout << "Press 'x' to exit.";
 }
 void input()
 {
@@ -95,6 +98,14 @@ void logic()
 		break;
 	default:
 		break;
+	}
+	if (head.x > width-1 || head.x < 0|| head.y>height || head.y<0)
+		game_over = true;
+	if (head.x == fruit.x && head.y == fruit.y)
+	{
+		score += 1;
+		fruit.x = rand() % width;
+		fruit.y = rand() % height;
 	}
 }
 int main()
